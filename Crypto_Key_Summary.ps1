@@ -36,6 +36,20 @@ foreach ($VMHost in $Hostlist) {
         $VMHostKeyProvider.Id 
     }
 
+Write-Host -ForeGroundColor Green "`n************************************`n*HostKeys used by Crypto-safe Hosts*`n************************************"
+$CryptoVMs=Get-VM|Where {$_.Encrypted}
+$Hostlist=Get-VMHost -Location $cluster
+foreach ($VMHost in $Hostlist) {
+    $VMHostView=$VMHost | Get-View
+        $HostKeysTable=New-Object System.Data.DataTable "TestVM Key"
+        $HostkeysTableCol1=New-Object System.Data.DataColumn KeyID,([string])
+        $HostkeysTableCol2=New-Object System.Data.DataColumn KMS_ClusterId,([string])
+        $HostKeysTable.columns.add($HostkeysTableCol1)
+        $HostKeysTable.columns.add($HostkeysTableCol2)
+        $row=$HostKeysTable.NewRow();$row.KeyID=$VMHostView.Runtime.CryptoKeyId.KeyId;$row.KMS_ClusterId=$VMHostView.Runtime.CryptoKeyId.ProviderId.Id;$HostKeysTable.Rows.Add($row)
+        $HostKeysTable | Format-Table -AutoSize
+    }
+	
 Write-Host -ForeGroundColor Green "`n****************************`n*Keys used by Encrypted VMs*`n****************************"
 $CryptoVMs=Get-VM|Where {$_.Encrypted}
 foreach ($vm in $CryptoVMs) {
