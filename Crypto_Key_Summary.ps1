@@ -40,7 +40,8 @@ Write-Host -ForeGroundColor Green "`n************************************`n*Host
 $CryptoVMs=Get-VM|Where {$_.Encrypted}
 $Hostlist=Get-VMHost -Location $cluster
 foreach ($VMHost in $Hostlist) {
-    $VMHostView=$VMHost | Get-View
+    Write-Host -ForegroundColor Yellow "$VMHost"
+	$VMHostView=$VMHost | Get-View
         $HostKeysTable=New-Object System.Data.DataTable "TestVM Key"
         $HostkeysTableCol1=New-Object System.Data.DataColumn KeyID,([string])
         $HostkeysTableCol2=New-Object System.Data.DataColumn KMS_ClusterId,([string])
